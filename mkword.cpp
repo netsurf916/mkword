@@ -245,32 +245,43 @@ int main(int argc, char *argv[])
     {
         int i = 0;
         FILE *input = fopen(argv[1], "r");
-        while(input && !feof(input))
+        if(input != NULL)
         {
-            if(i < sizeof(temp)/sizeof(temp[0]))
+            while(!feof(input))
             {
                 temp[i] = fgetc(input);
                 if((temp[i] >= 'a' && temp[i] <= 'z') || (temp[i] >= 'A' && temp[i] <= 'Z'))
                 {
                     ++i;
+                    if(i >= (sizeof(temp)/sizeof(temp[0]) - 1))
+                    {
+                        // The buffer is saturated
+                        temp[i] = 0;
+                        addword(data, temp);
+                        i = 0;
+                    }
                 } else {
                     temp[i] = 0;
                     if(i > 0) addword(data, temp);
                     i = 0;
                 }
             }
+            fclose(input);
         }
-    }
-    printchain(data);
+        printchain(data);
 
-    while(getword(data, temp, (sizeof(temp)/sizeof(temp[0])) - 1))
-    {
-        if(strlen(temp) >= 4)
+        while(getword(data, temp, (sizeof(temp)/sizeof(temp[0])) - 1))
         {
-            printf("%s\n", temp);
-            fflush(stdout);
-            usleep(80000);
+            if(strlen(temp) >= 4)
+            {
+                printf("%s ", temp);
+                fflush(stdout);
+                usleep(80000);
+            }
         }
+    } else {
+        printf(" Usage: %s <word list>\n", argv[0]);
+        return 0;
     }
 
     // Cleanup and exit
