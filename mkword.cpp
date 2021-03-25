@@ -178,7 +178,8 @@ bool getword(tuple *data, char *s, int l)
 {
     int      index  = 0;
     uint32_t total  = getstartlettertotal(data);
-    uint32_t random = rand() % (total + 1);
+    uint32_t random = rand() % total;
+    ++random; // Make the range = [1, total]
     total = 0;
     for(int i = 0; i < strlen(charset); ++i)
     {
@@ -205,7 +206,8 @@ bool getword(tuple *data, char *s, int l)
                     done = true;
                     break;
                 }
-                random = rand() % (total + 1);
+                random = rand() % total;
+                ++random; // Make the range = [1, total]
                 total  = 0;
                 tuple *temp = data[i].Next;
                 while(temp != NULL)
