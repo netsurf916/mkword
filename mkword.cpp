@@ -213,7 +213,7 @@ bool getword(tuple *data, char *s, int l)
                     total += temp->I;
                     if(total >= random)
                     {
-                        if( temp->Key == endflag)
+                        if(temp->Key == endflag)
                         {
                             s[index++] = 0;
                             done = true;
